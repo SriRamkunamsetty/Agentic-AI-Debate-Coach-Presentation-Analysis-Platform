@@ -12,17 +12,19 @@ const PRESET_TOPICS = [
 
 function TypewriterText({ text, speed = 15 }) {
   const [displayedText, setDisplayedText] = useState("");
+  const indexRef = useRef(0);
 
   useEffect(() => {
-    let index = 0;
+    indexRef.current = 0;
     setDisplayedText("");
     const timer = setInterval(() => {
-      setDisplayedText((previous) => {
-        const next = text.charAt(index);
-        index += 1;
-        if (index >= text.length) clearInterval(timer);
-        return previous + next;
-      });
+      const i = indexRef.current;
+      if (i >= text.length) {
+        clearInterval(timer);
+        return;
+      }
+      setDisplayedText(text.slice(0, i + 1));
+      indexRef.current = i + 1;
     }, speed);
     return () => clearInterval(timer);
   }, [text, speed]);

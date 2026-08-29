@@ -12,6 +12,7 @@ dist/
 # Local env files
 .env
 .env.*
+!.env.example
 
 # Debug & system logs
 npm-debug.log*
@@ -53,3 +54,6 @@ uploads/
 # OS metadata
 .DS_Store
 Thumbs.db
+
+# Scratch and extraction files
+pdf_extracted*.txt

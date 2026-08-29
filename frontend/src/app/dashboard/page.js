@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Navbar from '../../components/Navbar';
+
 import { apiFetch, clearAuth, getStoredUser } from '../../lib/api';
 
 const endpointFor = {
@@ -101,10 +101,9 @@ export default function DashboardPage() {
     finally { setCreating(false); }
   }
 
-  if (!user || loading) return <><Navbar /><main className="section-container" style={{ paddingTop: '3rem' }}>Loading persisted analytics…</main></>;
+  if (!user || loading) return <main className="section-container" style={{ paddingTop: '3rem' }}>Loading persisted analytics…</main>;
 
   return <>
-    <Navbar />
     <main className="section-container" style={{ paddingTop: '2.5rem', paddingBottom: '5rem' }}>
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '1rem', marginBottom: '2rem', borderBottom: '1px solid #e5e7eb', paddingBottom: '1.5rem' }}>
         <div><div className="font-mono text-red" style={{ fontSize: '.72rem' }}>LIVE ANALYTICS // {user.role.toUpperCase()}</div><h1 className="font-display" style={{ margin: '.5rem 0 0', fontSize: 'clamp(2rem, 5vw, 3.4rem)', textTransform: 'uppercase' }}>Welcome, {user.full_name || 'Debater'}</h1><p style={{ color: 'var(--text-muted)', marginTop: '.4rem' }}>{user.email || ''}</p></div>

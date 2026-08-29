@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { apiFetch, clearAuth, downloadReport, getStoredUser } from '../../lib/api';
-import Navbar from '../../components/Navbar';
+
 
 export default function ReportsPage() {
   const router = useRouter();
@@ -67,7 +67,7 @@ export default function ReportsPage() {
     finally { setBusy(''); }
   }
 
-  return <><Navbar /><main className="section-container" style={{ paddingTop: '2.5rem', paddingBottom: '5rem' }}>
+  return <><main className="section-container" style={{ paddingTop: '2.5rem', paddingBottom: '5rem' }}>
     <div className="badge-red-pill">EXPORT & COMPLIANCE ENGINE</div>
     <h1 className="font-display" style={{ fontSize: 'clamp(2rem, 5vw, 3rem)', fontWeight: 900, textTransform: 'uppercase', marginBottom: '1rem' }}>Reports & Certificates</h1>
     <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem', maxWidth: '760px' }}>Download persisted performance scorecards, argument audits, presentation metrics, and coaching plans. Completed qualifying sessions can also issue a verifiable LOGOS.AI certificate.</p>
