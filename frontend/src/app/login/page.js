@@ -89,6 +89,19 @@ export default function LoginPage() {
       {/* iOS Glass Login Card */}
       <div className="glass-card" style={{ width: '100%', maxWidth: '440px', padding: '2.5rem', position: 'relative', zIndex: 1 }}>
         <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.25rem' }}>
+            <img 
+              src="/logo.png" 
+              alt="LOGOS.AI" 
+              style={{ 
+                width: '64px', 
+                height: '64px', 
+                borderRadius: '18px', 
+                boxShadow: '0 8px 24px rgba(99, 102, 241, 0.45)',
+                border: '1.5px solid rgba(255, 255, 255, 0.5)'
+              }} 
+            />
+          </div>
           <div className="badge-red-pill" style={{ marginBottom: '0.75rem' }}>
             <span className="badge-dot"></span> SECURE AUTHENTICATION
           </div>

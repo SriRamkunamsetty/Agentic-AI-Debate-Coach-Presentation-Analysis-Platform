@@ -78,24 +78,16 @@ export default function Navbar() {
 
   return (
     <nav className="navbar">
-      {/* Brand Logo with iOS Gradient Glow */}
-      <Link href="/" className="brand-logo">
-        <span style={{ 
-          width: '28px', 
-          height: '28px', 
-          borderRadius: '8px', 
-          background: 'linear-gradient(135deg, #4f46e5, #ec4899)', 
-          display: 'inline-flex', 
-          alignItems: 'center', 
-          justifyContent: 'center', 
-          color: '#fff', 
-          fontSize: '0.85rem', 
-          fontWeight: 900,
-          boxShadow: '0 4px 12px rgba(99, 102, 241, 0.3)'
-        }}>
-          L
-        </span>
-        LOGOS.AI
+      {/* Brand Logo with iOS 26 Glossy Icon */}
+      <Link href="/" className="brand-logo-container">
+        <div className="brand-logo-icon">
+          <img 
+            src="/logo.png" 
+            alt="LOGOS.AI" 
+            className="brand-logo-img" 
+          />
+        </div>
+        <span className="brand-logo-text">LOGOS.AI</span>
       </Link>
 
       {/* Nav Links with iOS Glass Hover Pills */}
