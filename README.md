@@ -10,6 +10,21 @@
 
 ---
 
+## 📑 Table of Contents
+- [📖 About](#-about)
+- [🏗️ System Architecture](#️-system-architecture)
+- [🌟 Core Architectural Features](#-core-architectural-features)
+- [🔌 Key API Endpoints](#-key-api-endpoints)
+- [🛠️ Technology Stack](#️-technology-stack)
+- [🚀 Quick Start (Docker & Local Dev)](#-quick-start-running-locally)
+- [☸️ Kubernetes Production Deployment](#️-kubernetes-production-deployment)
+- [🔄 CI/CD Pipeline & Security](#-cicd-pipeline--security)
+- [📸 Platform UI & Output Screenshots](#-platform-ui--output-screenshots)
+- [📁 Repository Structure](#-repository-structure)
+- [🧪 Testing & Validation](#-testing--validation)
+
+---
+
 ## 📖 About
 
 **LOGOS.AI** is an enterprise, production-grade **Agentic AI Debate Coach & Presentation Analytics Platform**. Engineered for learners, competitive debaters, coaches, educators, and executive speakers, it elevates public speaking and formal argumentation from subjective intuition into a rigorously measured engineering discipline.
@@ -20,6 +35,51 @@
 * **Empirical Truth & 20+ Fallacy Matrix**: Extracts statistical assertions for real-time fact verification while scanning arguments against a 20+ cognitive fallacy taxonomy (*Post Hoc, Tu Quoque, Texas Sharpshooter, Equivocation, Fallacy Fallacy*, etc.).
 * **Bi-Directional Neural Audio & Prosody**: Computes speaking WPM cadence, silence ratio, acoustic volume variance, and synthesizes AI opponent rebuttals via `edge-tts` (with 100% deterministic offline fallback).
 * **Enterprise DevOps & Cloud Scale**: Architected with Celery + Redis distributed queues, Alembic schema migrations, multi-stage hardened Docker containers, Kubernetes HPA manifests, Prometheus metrics, and SAST/CVE-hardened GitHub Actions CI/CD.
+
+---
+
+## 🏗️ System Architecture
+
+```mermaid
+flowchart TB
+    subgraph Client ["Next.js 14 App Router UI"]
+        UI_Arena["/arena — Toulmin & 3-Judge Panel"]
+        UI_Drills["/drills — Blitz, Speed Run & Metronome"]
+        UI_Sim["/simulation — AI Personas & TTS"]
+        UI_Pres["/presentation — Vocal Telemetry"]
+    end
+
+    subgraph API ["FastAPI Control Plane (Python 3.11+)"]
+        R_Arena["/api/v1/arena/*"]
+        R_Sim["/api/v1/simulation/* & WS"]
+        R_Pres["/api/v1/presentation-analysis/*"]
+        Metrics["/metrics (Prometheus)"]
+    end
+
+    subgraph Agents ["AI / ML & Swarm Services"]
+        Toulmin["Toulmin 6-Part Engine"]
+        Swarm["3-Judge WSDC Panel\n(Matter / Manner / Method)"]
+        Fact["FactCheckerAgent\n(Truth Index)"]
+        TTS["Voice Engine\n(edge-tts + PCM fallback)"]
+        Fallacy["20+ Fallacy Classifier"]
+    end
+
+    subgraph Async ["Distributed Compute & Storage"]
+        Redis[("Redis 7\nBroker & Cache")]
+        Celery["Celery 5.4 Workers\n(audio / ai_agents / reports)"]
+        PG[("PostgreSQL 16\nAlembic Managed")]
+        Prom["Prometheus + Grafana"]
+    end
+
+    Client -->|REST / WebSocket| API
+    API --> Agents
+    API -->|Enqueue Tasks| Redis
+    Redis --> Celery
+    Celery --> Agents
+    API --> PG
+    Celery --> PG
+    Prom -->|Scrape /metrics| Metrics
+```
 
 ---
 
@@ -138,6 +198,22 @@
     - Full Kubernetes manifests: PostgreSQL StatefulSet with persistent storage, Redis, Backend with HPA (Horizontal Pod Autoscaler 2–10 replicas), Celery Worker, Frontend, and Ingress with TLS.
 11. **Comprehensive CI/CD Pipeline (GitHub Actions)**:
     - Automated Ruff linting, Bandit SAST security scans, Gitleaks secret detection, Pytest test suites, Next.js build validation, and Trivy container vulnerability scanning.
+
+---
+
+## 🔌 Key API Endpoints
+
+| Method | Endpoint | Engine / Service | Description |
+|---|---|---|---|
+| `POST` | `/api/v1/arena/toulmin/parse` | Toulmin Engine | Decomposes text into Claim, Data, Warrant, Backing, Qualifier, Rebuttal + graph |
+| `POST` | `/api/v1/arena/fact-check` | FactCheckerAgent | Audits empirical claims and computes Evidence Truth Index (`0–100%`) |
+| `POST` | `/api/v1/arena/match/adjudicate` | 3-Judge WSDC Swarm | Issues official Matter/Manner/Method ballots (`60–90` speaker scale) |
+| `POST` | `/api/v1/arena/voice/synthesize` | Voice Engine (`edge-tts`) | Synthesizes persona opponent audio stream (`.mp3`/`.wav`) |
+| `POST` | `/api/v1/simulation/turn` | Simulation Engine | Generates contextual persona rebuttals & 20+ fallacy flags |
+| `WS` | `/api/v1/simulation/ws/{session_id}` | Realtime WebSocket | Low-latency interactive debate sparring stream |
+| `POST` | `/api/v1/presentation-analysis/analyze-audio` | Speech Engine | Computes WPM, RMS energy, pause density & filler ratio |
+| `GET` | `/metrics` | Prometheus | OpenMetrics endpoint scraping HTTP latency & throughput |
+| `GET` | `/health` | Operations | Live DB connectivity & latency healthcheck |
 
 ---
 
@@ -264,12 +340,56 @@ python backend/view_db.py all
 
 ---
 
+## ☸️ Kubernetes Production Deployment
+
+The platform includes production-ready manifests in [`k8s/`](k8s/) configured for declarative deployment, horizontal autoscaling, and TLS ingress:
+
+```bash
+# 1. Create dedicated namespace
+kubectl apply -f k8s/namespace.yaml
+
+# 2. Deploy secrets and environment config
+kubectl apply -f k8s/configmap.yaml
+
+# 3. Deploy stateful backing services (Postgres StatefulSet + PVC & Redis)
+kubectl apply -f k8s/postgres.yaml
+
+# 4. Deploy stateless microservices (FastAPI Backend with HPA & Celery Worker)
+kubectl apply -f k8s/backend-deployment.yaml
+kubectl apply -f k8s/celery-deployment.yaml
+
+# 5. Deploy Ingress routing with automatic Let's Encrypt TLS
+kubectl apply -f k8s/ingress.yaml
+```
+
+* **Horizontal Pod Autoscaling**: Backend scales dynamically from **2 to 10 replicas** based on CPU/Memory thresholds.
+* **Storage Resilience**: PostgreSQL uses a `ReadWriteOnce` 20Gi PersistentVolumeClaim for transaction durability.
+* **Zero-Downtime Rolling Updates**: Configured with `maxUnavailable: 0` and `maxSurge: 1`.
+
+---
+
+## 🔄 CI/CD Pipeline & Security
+
+Automated multi-stage pipelines in [`.github/workflows/`](.github/workflows/) enforce quality, security, and supply-chain integrity on every push and pull request:
+
+| Stage | Tooling | Scope |
+|---|---|---|
+| **Linting & Code Quality** | `ruff` | Fast, deterministic Python syntax & formatting enforcement |
+| **Static Security (SAST)** | `bandit` | Automated security vulnerability scanning across backend AST |
+| **Secret Detection** | `gitleaks` | Detects accidentally committed API keys, tokens, or credentials |
+| **Automated Testing** | `pytest` + `unittest` | Runs offline AI/ML tests, Toulmin engine tests & coverage reports |
+| **Frontend Production Build** | `next build` | Compiles and validates all 15 static and dynamic Next.js routes |
+| **Container CVE Scan** | `trivy` | Scans production Docker container images for OS/package CVEs |
+| **Container Registry** | `GHCR` (GitHub Packages) | Automated multi-arch buildx publishing on releases |
+
+---
+
 ## 📁 Repository Structure
 
 ```
 Agentic-AI-Debate-Coach-Presentation-Analysis-Platform/
 ├── backend/
-│   ├── routers/                # 14 Microservice REST API Endpoints
+│   ├── routers/                # 15 Microservice REST API Endpoints
 │   │   ├── arena.py                # Toulmin, 3-Judge Swarm, Fact-Checker & Voice API
 │   │   ├── argument_analysis.py
 │   │   ├── auth.py
@@ -300,6 +420,7 @@ Agentic-AI-Debate-Coach-Presentation-Analysis-Platform/
 ├── frontend/
 │   ├── src/
 │   │   ├── app/                # Next.js App Router pages
+│   │   │   ├── about/          # Platform architecture & mission overview
 │   │   │   ├── arena/          # Tournament Arena, Toulmin Graph & Judge Panel
 │   │   │   ├── dashboard/      # Role-based analytics dashboards
 │   │   │   ├── drills/         # Rhetorical Gymnasium (Fallacy Blitz, Cadence Metronome)
