@@ -29,6 +29,15 @@
 
 **LOGOS.AI** is an enterprise, production-grade **Agentic AI Debate Coach & Presentation Analytics Platform**. Engineered for learners, competitive debaters, coaches, educators, and executive speakers, it elevates public speaking and formal argumentation from subjective intuition into a rigorously measured engineering discipline.
 
+### Live Cloud Deployments (Vercel)
+| Service | Live URL | Vercel Root Directory |
+|---|---|---|
+| 🌐 **Web Application UI (Next.js 14)** | **[https://logos-ai-tau.vercel.app](https://logos-ai-tau.vercel.app)** | `frontend` |
+| ⚡ **Backend API Gateway (FastAPI)** | **[https://logos-ai-api.vercel.app](https://logos-ai-api.vercel.app)** | `backend` |
+| 📚 **Interactive Swagger API Docs** | **[https://logos-ai-api.vercel.app/docs](https://logos-ai-api.vercel.app/docs)** | `backend` |
+
+> **Deploying this monorepo on Vercel?** Create two linked Vercel projects (or configure Vercel Services Beta): set Project 1's Root Directory to `frontend` (with `NEXT_PUBLIC_API_BASE_URL=https://<your-api-url>/api/v1`) and Project 2's Root Directory to `backend`. Opening the API URL in a browser renders the interactive **API Gateway Portal** linking directly to `/docs` and the web application.
+
 ### Why LOGOS.AI?
 * **Toulmin Analytical Deconstruction**: Automatically decomposes raw arguments into **Claim, Grounds, Warrant, Backing, Qualifier, and Rebuttal**, generating directed visual dependency graphs to isolate weak logical bridges.
 * **3-Judge WSDC / BP Championship Swarm**: Simulates a competitive tournament adjudication panel (**Judge Matter**, **Judge Manner**, **Judge Method**) awarding speaker scores on a 60–90 tournament scale with split decisions and justification ballots.
