@@ -51,8 +51,44 @@ export default function SimulationPage() {
   const [scheduledDate, setScheduledDate] = useState("");
   const [scheduledTime, setScheduledTime] = useState("");
   const [sessionTimer, setSessionTimer] = useState(0);
+  const [playingAudioIndex, setPlayingAudioIndex] = useState(null);
   const timerRef = useRef(null);
   const socketRef = useRef(null);
+  const audioPlayerRef = useRef(null);
+
+  const handlePlayVoice = async (text, index) => {
+    try {
+      if (audioPlayerRef.current) {
+        audioPlayerRef.current.pause();
+        audioPlayerRef.current = null;
+      }
+      setPlayingAudioIndex(index);
+      const token = getToken();
+      const response = await fetch(`${API_BASE}/arena/voice/synthesize`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({ text, persona }),
+      });
+      if (!response.ok) throw new Error("Voice synthesis failed");
+      const blob = await response.blob();
+      const audioUrl = URL.createObjectURL(blob);
+      const audio = new Audio(audioUrl);
+      audioPlayerRef.current = audio;
+      audio.onended = () => {
+        setPlayingAudioIndex(null);
+        URL.revokeObjectURL(audioUrl);
+      };
+      audio.onerror = () => {
+        setPlayingAudioIndex(null);
+      };
+      await audio.play();
+    } catch {
+      setPlayingAudioIndex(null);
+    }
+  };
 
   useEffect(() => {
     if (!getStoredUser() || !getToken()) window.location.href = "/login";
@@ -511,11 +547,34 @@ export default function SimulationPage() {
                 <div className="terminal-body" style={{ minHeight: "420px", maxHeight: "520px", overflowY: "auto" }}>
                   {transcript.map((item, index) => (
                     <div key={`${index}-${item.speaker}`} style={{ marginBottom: "1.25rem" }}>
-                      <div style={{ display: "flex", gap: "0.5rem", marginBottom: "0.25rem", alignItems: "center" }}>
-                        <span className="font-mono text-muted" style={{ fontSize: "0.72rem" }}>[{new Date().toLocaleTimeString()}]</span>
-                        <strong className={item.type === "user" ? "text-cyan" : item.type === "opponent" ? "text-red" : "text-green"}>
-                          {item.speaker}:
-                        </strong>
+                      <div style={{ display: "flex", gap: "0.5rem", marginBottom: "0.25rem", alignItems: "center", justifyContent: "space-between" }}>
+                        <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+                          <span className="font-mono text-muted" style={{ fontSize: "0.72rem" }}>[{new Date().toLocaleTimeString()}]</span>
+                          <strong className={item.type === "user" ? "text-cyan" : item.type === "opponent" ? "text-red" : "text-green"}>
+                            {item.speaker}:
+                          </strong>
+                        </div>
+                        {item.type === "opponent" && (
+                          <button
+                            type="button"
+                            onClick={() => handlePlayVoice(item.text, index)}
+                            disabled={playingAudioIndex === index}
+                            style={{
+                              padding: "0.2rem 0.55rem",
+                              fontSize: "0.72rem",
+                              background: playingAudioIndex === index ? "rgba(79, 70, 229, 0.4)" : "rgba(255, 255, 255, 0.08)",
+                              border: "1px solid rgba(255, 255, 255, 0.2)",
+                              color: "#fff",
+                              borderRadius: "6px",
+                              cursor: "pointer",
+                              display: "inline-flex",
+                              alignItems: "center",
+                              gap: "0.3rem",
+                            }}
+                          >
+                            {playingAudioIndex === index ? "🔊 Playing..." : "🔊 Read"}
+                          </button>
+                        )}
                       </div>
                       <div style={{ paddingLeft: "1.25rem", color: item.type === "system" ? "#94a3b8" : "#f1f5f9", lineHeight: "1.6" }}>
                         {item.type === "opponent" && index === transcript.length - 1 ? <TypewriterText text={item.text} /> : item.text}

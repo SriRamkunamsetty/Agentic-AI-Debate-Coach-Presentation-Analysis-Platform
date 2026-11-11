@@ -62,6 +62,26 @@ class Settings:
     OPENAI_API_BASE: str = os.getenv("OPENAI_API_BASE", "")
     OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY", "")
     FAISS_INDEX_PATH: str = os.getenv("FAISS_INDEX_PATH", "/tmp/argument_memory.index" if IS_VERCEL else "./data/argument_memory.index")
+    # Redis & Distributed Celery Task Queue
+    REDIS_URL: str = os.getenv("REDIS_URL", "redis://localhost:6379/0")
+    CELERY_BROKER_URL: str = os.getenv("CELERY_BROKER_URL", os.getenv("REDIS_URL", "redis://localhost:6379/0"))
+    CELERY_RESULT_BACKEND: str = os.getenv("CELERY_RESULT_BACKEND", os.getenv("REDIS_URL", "redis://localhost:6379/0"))
+    ENABLE_SEMANTIC_CACHE: bool = os.getenv("ENABLE_SEMANTIC_CACHE", "true").lower() in {"1", "true", "yes"}
+    PROMETHEUS_METRICS_ENABLED: bool = os.getenv("PROMETHEUS_METRICS_ENABLED", "true").lower() in {"1", "true", "yes"}
+    
+    # Neural Voice & Speech Synthesis
+    TTS_PROVIDER: str = os.getenv("TTS_PROVIDER", "edge-tts").lower()
+    TTS_VOICE_CONTRARIAN: str = os.getenv("TTS_VOICE_CONTRARIAN", "en-US-GuyNeural")
+    TTS_VOICE_ACADEMIC: str = os.getenv("TTS_VOICE_ACADEMIC", "en-GB-RyanNeural")
+    TTS_VOICE_STRATEGIST: str = os.getenv("TTS_VOICE_STRATEGIST", "en-US-ChristopherNeural")
+
+    # Storage Backend (local filesystem or S3 / MinIO)
+    STORAGE_BACKEND: str = os.getenv("STORAGE_BACKEND", "local").lower()
+    S3_ENDPOINT: str = os.getenv("S3_ENDPOINT", "")
+    S3_BUCKET: str = os.getenv("S3_BUCKET", "logos-ai-artifacts")
+    S3_ACCESS_KEY: str = os.getenv("S3_ACCESS_KEY", "")
+    S3_SECRET_KEY: str = os.getenv("S3_SECRET_KEY", "")
+
     UPLOAD_DIR: str = os.getenv("UPLOAD_DIR", "/tmp/logos_ai_uploads" if IS_VERCEL else "./uploads")
     MAX_AUDIO_FILE_MB: int = min(int(os.getenv("MAX_AUDIO_FILE_MB", "25")), 100)
     ARTIFACT_RETENTION_DAYS: int = int(os.getenv("ARTIFACT_RETENTION_DAYS", "30"))

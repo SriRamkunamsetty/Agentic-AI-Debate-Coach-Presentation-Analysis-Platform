@@ -237,6 +237,48 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Platform Architecture & About Section */}
+      <section className="section-container" id="about" style={{ paddingTop: '1rem' }}>
+        <div className="section-header">
+          <div>
+            <div className="badge-red-pill">ARCHITECTURE & MISSION</div>
+            <h2 className="section-title">About LOGOS.AI</h2>
+          </div>
+          <Link href="/about" className="font-mono text-muted" style={{ fontSize: '0.85rem', textDecoration: 'underline' }}>
+            [READ FULL SPECIFICATION ➔]
+          </Link>
+        </div>
+
+        <div className="glass-card" style={{ padding: '2rem', marginBottom: '1.5rem', borderLeft: '4px solid #4f46e5' }}>
+          <p style={{ fontSize: '1.05rem', color: '#334155', lineHeight: 1.7 }}>
+            <strong>LOGOS.AI</strong> is the world&apos;s first production-grade agentic debate coach and speech analytics platform. Powered by <strong>Stephen Toulmin&apos;s analytical argument model</strong>, a <strong>3-Judge WSDC/BP championship adjudication swarm</strong> (Matter, Manner, Method), and <strong>distributed real-time speech prosody engines</strong>, LOGOS.AI transforms rhetorical persuasion into an accessible, data-driven discipline.
+          </p>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1rem' }}>
+          <div className="module-card">
+            <span style={{ fontSize: '1.5rem' }}>📐</span>
+            <h3 className="module-title" style={{ marginTop: '0.5rem' }}>Toulmin Argument Engine</h3>
+            <p className="module-desc">Extracts Claims, Grounds, Warrants, Backing, Qualifiers, and Rebuttals with interactive directed graphs.</p>
+          </div>
+          <div className="module-card">
+            <span style={{ fontSize: '1.5rem' }}>⚖️</span>
+            <h3 className="module-title" style={{ marginTop: '0.5rem' }}>3-Judge WSDC Swarm</h3>
+            <p className="module-desc">Simulates Matter, Manner, and Method judging criteria producing standardized 60-90 scale ballots.</p>
+          </div>
+          <div className="module-card">
+            <span style={{ fontSize: '1.5rem' }}>⚡</span>
+            <h3 className="module-title" style={{ marginTop: '0.5rem' }}>20+ Sophism Taxonomy</h3>
+            <p className="module-desc">Continuous neural and deterministic classification across 20+ cognitive traps and rhetorical fallacies.</p>
+          </div>
+          <div className="module-card">
+            <span style={{ fontSize: '1.5rem' }}>🚀</span>
+            <h3 className="module-title" style={{ marginTop: '0.5rem' }}>Distributed Cloud DevOps</h3>
+            <p className="module-desc">Celery + Redis asynchronous tasks, Prometheus telemetry, Alembic migrations, and Kubernetes autoscaling.</p>
+          </div>
+        </div>
+      </section>
+
       {/* Onboarding & Personas Section */}
       <section className="section-container" style={{ textAlign: 'center', padding: '4rem 3rem 6rem' }}>
         <h2 className="font-display" style={{ fontSize: 'clamp(2rem, 4vw, 3.2rem)', fontWeight: '900', marginBottom: '2.5rem' }}>

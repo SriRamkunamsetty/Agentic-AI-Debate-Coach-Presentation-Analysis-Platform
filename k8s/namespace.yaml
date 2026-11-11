@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: logos-ai
+  labels:
+    app.kubernetes.io/name: logos-ai
+    app.kubernetes.io/part-of: rhetorical-intelligence-platform

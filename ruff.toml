@@ -1,0 +1,13 @@
+# Ruff Configuration for LOGOS.AI
+target-version = "py310"
+line-length = 120
+
+[lint]
+select = [
+    "E9",   # Runtime syntax errors
+    "F",    # Pyflakes logical errors
+]
+ignore = [
+    "F401", # unused imports allowed in __init__ / migrations / legacy routers
+    "F841", # unused local variables in diagnostics scripts
+]

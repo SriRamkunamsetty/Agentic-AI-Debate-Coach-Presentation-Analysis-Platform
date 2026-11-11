@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logos-celery-worker
+  namespace: logos-ai
+  labels:
+    app: logos-celery-worker
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: logos-celery-worker
+  template:
+    metadata:
+      labels:
+        app: logos-celery-worker
+    spec:
+      containers:
+        - name: celery-worker
+          image: ghcr.io/sriramkunamsetty/logos-ai/backend:latest
+          command: ["celery", "-A", "celery_app", "worker", "--loglevel=info", "--concurrency=4", "-Q", "audio,ai_agents,reports,celery"]
+          envFrom:
+            - configMapRef:
+                name: logos-ai-config
+            - secretRef:
+                name: logos-ai-secrets
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "1Gi"
+            limits:
+              cpu: "2000m"
+              memory: "4Gi"

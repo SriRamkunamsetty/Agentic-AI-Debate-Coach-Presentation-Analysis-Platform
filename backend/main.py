@@ -24,6 +24,7 @@ from routers import (
     sessions,
     simulation,
     workflows,
+    arena,
 )
 
 
@@ -60,6 +61,15 @@ app.include_router(reports.router)
 app.include_router(notifications.router)
 app.include_router(feedback.router)
 app.include_router(workflows.router)
+app.include_router(arena.router)
+
+# Prometheus Observability Metric Scraper
+try:
+    from prometheus_fastapi_instrumentator import Instrumentator
+    if settings.PROMETHEUS_METRICS_ENABLED:
+        Instrumentator().instrument(app).expose(app, endpoint="/metrics", tags=["Operations"])
+except Exception:
+    pass
 
 
 @app.get("/")

@@ -10,6 +10,9 @@ MIN_WORDS = 4
 SUPPORTED_FALLACIES = [
     "Ad Hominem", "Straw Man", "False Dilemma", "Slippery Slope",
     "Appeal to Authority", "Circular Reasoning", "Hasty Generalization", "Red Herring",
+    "Post Hoc Ergo Propter Hoc", "Bandwagon (Ad Populum)", "Tu Quoque (Whataboutism)",
+    "Appeal to Emotion", "Texas Sharpshooter", "Genetic Fallacy", "No True Scotsman",
+    "Non Sequitur", "Appeal to Ignorance", "Equivocation", "Fallacy Fallacy",
 ]
 
 SYSTEM_PROMPT = f"""You are a critical thinking expert who detects logical fallacies.

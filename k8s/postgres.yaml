@@ -1,0 +1,109 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: logos-postgres
+  namespace: logos-ai
+spec:
+  serviceName: logos-postgres-service
+  replicas: 1
+  selector:
+    matchLabels:
+      app: logos-postgres
+  template:
+    metadata:
+      labels:
+        app: logos-postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres:16-alpine
+          ports:
+            - containerPort: 5432
+              name: postgres
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: logos-ai-secrets
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: logos-ai-secrets
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: logos-ai-secrets
+                  key: POSTGRES_DB
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "1000m"
+              memory: "2Gi"
+          volumeMounts:
+            - name: postgres-storage
+              mountPath: /var/lib/postgresql/data
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 20Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: logos-postgres-service
+  namespace: logos-ai
+spec:
+  ports:
+    - port: 5432
+      targetPort: 5432
+  selector:
+    app: logos-postgres
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: logos-redis
+  namespace: logos-ai
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: logos-redis
+  template:
+    metadata:
+      labels:
+        app: logos-redis
+    spec:
+      containers:
+        - name: redis
+          image: redis:7-alpine
+          command: ["redis-server", "--appendonly", "yes"]
+          ports:
+            - containerPort: 6379
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "1Gi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: logos-redis-service
+  namespace: logos-ai
+spec:
+  ports:
+    - port: 6379
+      targetPort: 6379
+  selector:
+    app: logos-redis

@@ -27,12 +27,18 @@ except ImportError:  # pragma: no cover - exercised only in minimal deployments.
 
 
 EMBEDDING_DIMENSION = 128
-SUPPORTED_PERSONAS = {"The Contrarian", "The Academic", "The Strategist"}
+SUPPORTED_PERSONAS = {
+    "The Contrarian",
+    "The Academic",
+    "The Strategist",
+    "The Socratic Inquirer",
+    "The Populist Orator",
+}
 
 FALLACY_PATTERNS: Dict[str, Dict[str, Any]] = {
     "Ad Hominem": {
         "patterns": [
-            r"\b(?:idiot|fool|corrupt|liar|ignorant|stupid|incompetent)\b",
+            r"\b(?:idiot|fool|corrupt|liar|ignorant|stupid|incompetent|hypocrite)\b",
             r"\byou\s+(?:don't|do not)\s+know\b",
         ],
         "explanation": "Attacking the opponent's character or personal traits rather than engaging with their argument.",
@@ -41,7 +47,7 @@ FALLACY_PATTERNS: Dict[str, Dict[str, Any]] = {
     "Straw Man": {
         "patterns": [
             r"\bso\s+you're\s+saying\b",
-            r"\byou\s+want\s+to\s+(?:destroy|eliminate)\b",
+            r"\byou\s+want\s+to\s+(?:destroy|eliminate|abolish)\b",
             r"\bclaim(?:s|ing)?\s+that\s+all\b",
         ],
         "explanation": "Misrepresenting or exaggerating an opponent's argument to make it easier to attack.",
@@ -104,6 +110,102 @@ FALLACY_PATTERNS: Dict[str, Dict[str, Any]] = {
         ],
         "explanation": "Introducing an irrelevant issue to divert attention from the proposition under discussion.",
         "correction": "Return to the original claim and explain how each piece of evidence bears on it.",
+    },
+    "Post Hoc Ergo Propter Hoc": {
+        "patterns": [
+            r"\bafter\s+(?:this|that),?\s+therefore\s+because\b",
+            r"\bhappened\s+right\s+after,?\s+so\s+it\s+caused\b",
+            r"\bcorrelation\s+proves\b",
+        ],
+        "explanation": "Assuming that because event B occurred after event A, event A necessarily caused event B.",
+        "correction": "Isolate the causal mechanism and eliminate confounding variables before concluding causation.",
+    },
+    "Bandwagon (Ad Populum)": {
+        "patterns": [
+            r"\bmost\s+people\s+agree\s+that\b",
+            r"\beveryone\s+is\s+doing\s+it\b",
+            r"\bpopular\s+opinion\s+proves\b",
+            r"\bmillions\s+of\s+people\s+can't\s+be\s+wrong\b",
+        ],
+        "explanation": "Arguing that a claim must be true or good simply because it is popular.",
+        "correction": "Substantiate the argument using factual validity rather than polling numbers.",
+    },
+    "Tu Quoque (Whataboutism)": {
+        "patterns": [
+            r"\byou\s+did\s+(?:the\s+same|it\s+too)\b",
+            r"\bwho\s+are\s+you\s+to\s+talk\b",
+            r"\blook\s+at\s+your\s+own\s+record\b",
+        ],
+        "explanation": "Attempting to discredit an opponent's argument by accusing them of the same behavior.",
+        "correction": "Address the criticism on its own merits without deflecting to the speaker's personal actions.",
+    },
+    "Appeal to Emotion": {
+        "patterns": [
+            r"\bthink\s+of\s+the\s+children\b",
+            r"\bif\s+you\s+have\s+any\s+heart\b",
+            r"\bdisgusting\s+and\s+terrifying\b",
+        ],
+        "explanation": "Manipulating emotional responses (pity, fear, disgust) in place of valid, reasoned argumentation.",
+        "correction": "Pair ethical or emotional arguments with factual premises and policy justifications.",
+    },
+    "Texas Sharpshooter": {
+        "patterns": [
+            r"\bconveniently\s+ignoring\s+the\s+rest\b",
+            r"\blook\s+at\s+this\s+one\s+single\s+metric\b",
+            r"\bcherry[- ]pick(?:ed|ing)?\b",
+        ],
+        "explanation": "Selecting a narrow cluster of data that fits a thesis while ignoring the broader data set.",
+        "correction": "Examine the complete statistical sample and acknowledge contrary data points.",
+    },
+    "Genetic Fallacy": {
+        "patterns": [
+            r"\bcomes\s+from\s+a\s+(?:discredited|corrupt|foreign)\s+source,?\s+so\s+it's\s+false\b",
+            r"\bidea\s+was\s+first\s+proposed\s+by\b",
+        ],
+        "explanation": "Judging a claim based on its origin or history rather than its current factual validity.",
+        "correction": "Evaluate the evidence itself rather than dismissing it purely on historical origins.",
+    },
+    "No True Scotsman": {
+        "patterns": [
+            r"\bno\s+real\s+(?:debater|citizen|expert|patriot)\s+would\b",
+            r"\btrue\s+(?:believers|scientists)\s+never\b",
+        ],
+        "explanation": "Modifying a definition ad-hoc to exclude counterexamples and protect an absolute generalization.",
+        "correction": "Define categories clearly in advance and accept empirical exceptions.",
+    },
+    "Non Sequitur": {
+        "patterns": [
+            r"\btherefore\s+we\s+must\s+ban\b",
+            r"\bit\s+follows\s+automatically\s+that\b",
+            r"\bwhich\s+means\s+it\s+has\s+nothing\s+to\s+do\b",
+        ],
+        "explanation": "Stating a conclusion that does not logically follow from the preceding premises.",
+        "correction": "Demonstrate the step-by-step inferential deduction connecting premises to conclusion.",
+    },
+    "Appeal to Ignorance": {
+        "patterns": [
+            r"\bno\s+one\s+has\s+proven\s+it\s+false\b",
+            r"\bhasn't\s+been\s+disproven,?\s+therefore\b",
+            r"\bsince\s+there\s+is\s+no\s+evidence\s+against\b",
+        ],
+        "explanation": "Asserting that a proposition is true because it has not yet been proven false.",
+        "correction": "Place the burden of proof on the positive claim rather than the absence of disproof.",
+    },
+    "Equivocation": {
+        "patterns": [
+            r"\bshifting\s+definitions?\b",
+            r"\bword\s+means\s+both\b",
+        ],
+        "explanation": "Using a term with multiple meanings interchangeably within the same argument.",
+        "correction": "Maintain consistent, explicit definitions for all terms throughout the debate.",
+    },
+    "Fallacy Fallacy": {
+        "patterns": [
+            r"\byou\s+used\s+a\s+fallacy,?\s+so\s+your\s+claim\s+is\s+false\b",
+            r"\bargument\s+contained\s+a\s+fallacy\s+therefore\s+the\s+conclusion\s+is\s+wrong\b",
+        ],
+        "explanation": "Presuming that because an argument contained a fallacy, its conclusion must be untrue.",
+        "correction": "Differentiate between flawed reasoning and whether the underlying conclusion is factually accurate.",
     },
 }
 
@@ -386,11 +488,15 @@ class AIEngine:
             "The Contrarian": "Challenge the premise directly, but keep the response tied to evidence.",
             "The Academic": "Use a Socratic style and request precise definitions, sources, and methodology.",
             "The Strategist": "Focus on implementation, incentives, trade-offs, and unintended consequences.",
+            "The Socratic Inquirer": "Ask probing questions that reveal underlying contradictions in assumptions.",
+            "The Populist Orator": "Appeal to common intuition, lived experience, and broader public impact.",
         }
         prefixes = {
             "The Contrarian": "I challenge your core premise.",
             "The Academic": "Your argument needs clearer methodological support.",
             "The Strategist": "From an implementation perspective, your thesis needs a stronger plan.",
+            "The Socratic Inquirer": "Consider this question: how can you maintain that stance when",
+            "The Populist Orator": "Looking at how real people are affected by this policy,",
         }
         primary_counter = analysis["counterarguments"][0]
         strength = _clamp(55.0 + analysis["logical_consistency"] * 0.25 + analysis["reasoning_quality"] * 0.2)

@@ -95,6 +95,12 @@ export default function Navbar() {
         <Link href="/#engines" className={`nav-link ${pathname === '/' ? 'active' : ''}`}>
           ENGINES
         </Link>
+        <Link href="/arena" className={`nav-link ${pathname === '/arena' ? 'active' : ''}`}>
+          ARENA
+        </Link>
+        <Link href="/drills" className={`nav-link ${pathname === '/drills' ? 'active' : ''}`}>
+          DRILLS
+        </Link>
         <Link href="/simulation" className={`nav-link ${pathname === '/simulation' ? 'active' : ''}`}>
           SIMULATION
         </Link>
@@ -106,6 +112,9 @@ export default function Navbar() {
         </Link>
         <Link href="/reports" className={`nav-link ${pathname === '/reports' ? 'active' : ''}`}>
           REPORTS
+        </Link>
+        <Link href="/about" className={`nav-link ${pathname === '/about' ? 'active' : ''}`}>
+          ABOUT
         </Link>
         {user && (
           <Link href="/notifications" className={`nav-link ${pathname === '/notifications' ? 'active' : ''}`}>

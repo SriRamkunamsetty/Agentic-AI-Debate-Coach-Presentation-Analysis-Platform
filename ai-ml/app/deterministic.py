@@ -19,6 +19,17 @@ SUPPORTED_FALLACIES = (
     "Circular Reasoning",
     "Hasty Generalization",
     "Red Herring",
+    "Post Hoc Ergo Propter Hoc",
+    "Bandwagon (Ad Populum)",
+    "Tu Quoque (Whataboutism)",
+    "Appeal to Emotion",
+    "Texas Sharpshooter",
+    "Genetic Fallacy",
+    "No True Scotsman",
+    "Non Sequitur",
+    "Appeal to Ignorance",
+    "Equivocation",
+    "Fallacy Fallacy",
 )
 
 
@@ -82,7 +93,7 @@ def analyze_argument(text: str) -> dict[str, Any]:
 
 
 _FALLACY_PATTERNS: tuple[tuple[str, tuple[str, ...]], ...] = (
-    ("Ad Hominem", (r"(?:can't|cannot) trust .*\b(?:because|since)\b", r"\b(?:idiot|stupid|ignorant|uneducated|didn't even study|not qualified)\b")),
+    ("Ad Hominem", (r"(?:can't|cannot) trust .*\b(?:because|since)\b", r"\b(?:idiot|stupid|ignorant|uneducated|didn't even study|not qualified|hypocrite)\b")),
     ("Straw Man", (r"\bwhich means\b.*\b(?:bankrupt|destroy|abolish|everyone)\b", r"\bso you want\b.*\b(?:all|everyone|never)\b")),
     ("False Dilemma", (r"\beither\b.+\bor\b", r"\b(?:only|just)\s+(?:two|these two)\s+(?:choices|options)\b")),
     ("Slippery Slope", (r"\bif\b.+\b(?:allow|let|permit|accept)\b.+\b(?:soon|eventually|next|collapse|doomed|bankrupt)\b", r"\bif\b.+\bthen\b.+\b(?:collapse|doomed|disaster)\b")),
@@ -90,6 +101,17 @@ _FALLACY_PATTERNS: tuple[tuple[str, tuple[str, ...]], ...] = (
     ("Circular Reasoning", (r"\b(?:true|correct|right)\b.+\bbecause\b.+\b(?:true|correct|right|says so)\b", r"\bbecause it says so\b", r"\bnever wrong\b")),
     ("Hasty Generalization", (r"\b(?:all|every|none)\b.+\b(?:must|are|is)\b", r"\bone\b.+\bso\b.+\b(?:all|every)\b", r"\b(?:always|never)\b")),
     ("Red Herring", (r"\bwhy worry\b.+\bwhen\b", r"\b(?:instead|rather)\b.+\b(?:discuss|talk about)\b")),
+    ("Post Hoc Ergo Propter Hoc", (r"\bafter\s+(?:this|that),?\s+therefore\s+because\b", r"\bhappened\s+right\s+after,?\s+so\s+it\s+caused\b", r"\bcorrelation\s+proves\b")),
+    ("Bandwagon (Ad Populum)", (r"\bmost\s+people\s+agree\s+that\b", r"\beveryone\s+is\s+doing\s+it\b", r"\bpopular\s+opinion\s+proves\b")),
+    ("Tu Quoque (Whataboutism)", (r"\byou\s+did\s+(?:the\s+same|it\s+too)\b", r"\bwho\s+are\s+you\s+to\s+talk\b", r"\blook\s+at\s+your\s+own\s+record\b")),
+    ("Appeal to Emotion", (r"\bthink\s+of\s+the\s+children\b", r"\bif\s+you\s+have\s+any\s+heart\b", r"\bdisgusting\s+and\s+terrifying\b")),
+    ("Texas Sharpshooter", (r"\bconveniently\s+ignoring\s+the\s+rest\b", r"\blook\s+at\s+this\s+one\s+single\s+metric\b", r"\bcherry[- ]pick(?:ed|ing)?\b")),
+    ("Genetic Fallacy", (r"\bcomes\s+from\s+a\s+(?:discredited|corrupt|foreign)\s+source\b", r"\bidea\s+was\s+first\s+proposed\s+by\b")),
+    ("No True Scotsman", (r"\bno\s+real\s+(?:debater|citizen|expert|patriot)\s+would\b", r"\btrue\s+(?:believers|scientists)\s+never\b")),
+    ("Non Sequitur", (r"\btherefore\s+we\s+must\s+ban\b", r"\bit\s+follows\s+automatically\s+that\b")),
+    ("Appeal to Ignorance", (r"\bno\s+one\s+has\s+proven\s+it\s+false\b", r"\bhasn't\s+been\s+disproven\b")),
+    ("Equivocation", (r"\bshifting\s+definitions?\b", r"\bword\s+means\s+both\b")),
+    ("Fallacy Fallacy", (r"\byou\s+used\s+a\s+fallacy,?\s+so\s+your\s+claim\s+is\s+false\b",)),
 )
 
 
@@ -110,11 +132,22 @@ def detect_fallacies(text: str) -> dict[str, Any]:
             "Circular Reasoning": "The conclusion is used as its own support rather than independent evidence.",
             "Hasty Generalization": "The statement generalizes broadly from insufficient or unrepresentative evidence.",
             "Red Herring": "The statement shifts attention from the issue under discussion to an unrelated point.",
+            "Post Hoc Ergo Propter Hoc": "Assuming that because event B followed event A, event A caused event B.",
+            "Bandwagon (Ad Populum)": "Claiming that an idea is right solely because it is popular.",
+            "Tu Quoque (Whataboutism)": "Discrediting an argument by claiming the opponent is guilty of the same behavior.",
+            "Appeal to Emotion": "Manipulating emotion in place of reasoned argument.",
+            "Texas Sharpshooter": "Cherry-picking a narrow cluster of favorable data points.",
+            "Genetic Fallacy": "Judging an idea by its origin rather than its factual merits.",
+            "No True Scotsman": "Altering an arbitrary definition to dismiss counterexamples.",
+            "Non Sequitur": "The conclusion does not follow from the premises.",
+            "Appeal to Ignorance": "Claiming an assertion is true because it hasn't been disproven.",
+            "Equivocation": "Shifting the definition of a key word mid-argument.",
+            "Fallacy Fallacy": "Assuming a conclusion is wrong merely because a flawed argument was used.",
         }
         found.append({
             "type": fallacy_type,
             "excerpt": excerpt,
-            "explanation": explanations[fallacy_type],
+            "explanation": explanations.get(fallacy_type, "Fallacious reasoning pattern detected."),
             "correction_suggestion": "Address the claim directly and support it with relevant, independently verifiable evidence.",
             "confidence": 78,
         })

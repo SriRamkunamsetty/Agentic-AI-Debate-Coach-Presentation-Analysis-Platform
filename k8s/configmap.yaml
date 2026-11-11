@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: logos-ai-config
+  namespace: logos-ai
+data:
+  ENVIRONMENT: "production"
+  APP_VERSION: "4.3.0"
+  AI_PROVIDER: "heuristic"
+  AI_MODEL: "gpt-5-mini"
+  REDIS_URL: "redis://logos-redis-service:6379/0"
+  CELERY_BROKER_URL: "redis://logos-redis-service:6379/0"
+  CELERY_RESULT_BACKEND: "redis://logos-redis-service:6379/0"
+  UPLOAD_DIR: "/app/uploads"
+  CORS_ORIGINS: "https://logos-ai.com,https://app.logos-ai.com"
+  PROMETHEUS_METRICS_ENABLED: "true"
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: logos-ai-secrets
+  namespace: logos-ai
+type: Opaque
+stringData:
+  SECRET_KEY: "replace-with-ultra-secure-random-token-in-production"
+  POSTGRES_USER: "logos_prod_user"
+  POSTGRES_PASSWORD: "logos_prod_secure_password"
+  POSTGRES_DB: "logos_ai_db"
+  DATABASE_URL: "postgresql://logos_prod_user:logos_prod_secure_password@logos-postgres-service:5432/logos_ai_db"
+  OPENAI_API_KEY: ""
