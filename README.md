@@ -4,9 +4,22 @@
 [![Next.js](https://img.shields.io/badge/Next.js-14.2-black.svg?logo=next.js&logoColor=white)](https://nextjs.org)
 [![Python](https://img.shields.io/badge/Python-3.10%2B-blue.svg?logo=python&logoColor=white)](https://www.python.org)
 [![React](https://img.shields.io/badge/React-18-61DAFB.svg?logo=react&logoColor=black)](https://react.dev)
+[![Kubernetes](https://img.shields.io/badge/Kubernetes-Production-326CE5.svg?logo=kubernetes&logoColor=white)](k8s/)
+[![Celery](https://img.shields.io/badge/Celery-Distributed-37814A.svg?logo=celery&logoColor=white)](backend/celery_app.py)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**LOGOS.AI** is an advanced, production-grade **Agentic AI Debate Coach & Presentation Analytics Platform**. Engineered for learners, debate coaches, educators, and institutions, it empowers users to master high-stakes rhetoric, argument structure, public speaking prosody, and logical fallacy defense in real-time.
+---
+
+## 📖 About
+
+**LOGOS.AI** is an enterprise, production-grade **Agentic AI Debate Coach & Presentation Analytics Platform**. Engineered for learners, competitive debaters, coaches, educators, and executive speakers, it elevates public speaking and formal argumentation from subjective intuition into a rigorously measured engineering discipline.
+
+### Why LOGOS.AI?
+* **Toulmin Analytical Deconstruction**: Automatically decomposes raw arguments into **Claim, Grounds, Warrant, Backing, Qualifier, and Rebuttal**, generating directed visual dependency graphs to isolate weak logical bridges.
+* **3-Judge WSDC / BP Championship Swarm**: Simulates a competitive tournament adjudication panel (**Judge Matter**, **Judge Manner**, **Judge Method**) awarding speaker scores on a 60–90 tournament scale with split decisions and justification ballots.
+* **Empirical Truth & 20+ Fallacy Matrix**: Extracts statistical assertions for real-time fact verification while scanning arguments against a 20+ cognitive fallacy taxonomy (*Post Hoc, Tu Quoque, Texas Sharpshooter, Equivocation, Fallacy Fallacy*, etc.).
+* **Bi-Directional Neural Audio & Prosody**: Computes speaking WPM cadence, silence ratio, acoustic volume variance, and synthesizes AI opponent rebuttals via `edge-tts` (with 100% deterministic offline fallback).
+* **Enterprise DevOps & Cloud Scale**: Architected with Celery + Redis distributed queues, Alembic schema migrations, multi-stage hardened Docker containers, Kubernetes HPA manifests, Prometheus metrics, and SAST/CVE-hardened GitHub Actions CI/CD.
 
 ---
 

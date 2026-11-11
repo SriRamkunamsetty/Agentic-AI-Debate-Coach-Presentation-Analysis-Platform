@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 export default function Footer() {
   return (
     <footer className="footer">
@@ -10,7 +12,10 @@ export default function Footer() {
         <span>LOGOS.AI</span>
       </div>
       <div>© 2026 RHETORICAL INTELLIGENCE SYSTEMS. ALL RIGHTS RESERVED.</div>
-      <div style={{ display: 'flex', gap: '1.5rem' }}>
+      <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
+        <Link href="/about">ABOUT</Link>
+        <Link href="/arena">ARENA</Link>
+        <Link href="/drills">DRILLS</Link>
         <a href="http://localhost:8000/docs" target="_blank" rel="noreferrer">API_DOCS</a>
         <span>SYSTEM_STATUS: 100% OPERATIONAL</span>
       </div>
