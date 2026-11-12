@@ -158,20 +158,39 @@ flowchart TB
 
 ---
 
-### 9. Tournament Arena & Toulmin Graph Visualizer (`/arena`)
-> Live competitive debating arena equipped with Toulmin Model 6-part structural argument deconstruction, real-time factual assertion verification, and an official 3-Judge WSDC/BP Adjudication Panel (Matter, Manner, Method).
+### 9. Tournament Arena, Toulmin Graph & 3-Judge WSDC Swarm (`/arena`)
+> Live competitive debating arena equipped with Stephen Toulmin 6-part structural argument deconstruction, real-time empirical fact verification, and an official 3-Judge WSDC/BP Adjudication Panel (Matter, Manner, Method).
+
+| Toulmin 6-Part Structural Graph | Real-Time Fact & Citation Verifier |
+|:---:|:---:|
+| ![Toulmin Argument Graph](docs/screenshots/15_arena_toulmin_graph.png) | ![Empirical Fact Verifier](docs/screenshots/16_arena_fact_check.png) |
+
+![Official 3-Judge WSDC Adjudication Ballot](docs/screenshots/17_arena_3judge_ballot.png)
 
 ---
 
 ### 10. Rhetorical Drill Gymnasium (`/drills`)
 > Gamified rapid-fire training modules featuring 15-second Fallacy Blitz, 30-second Rebuttal Speed Runs, and live Cadence Metronome with WPM biofeedback.
 
+| 15s Fallacy Blitz Challenge | Live Cadence Metronome & WPM Pacer |
+|:---:|:---:|
+| ![Fallacy Blitz Drill](docs/screenshots/18_drills_fallacy_blitz.png) | ![Cadence Metronome](docs/screenshots/19_drills_cadence_metronome.png) |
+
 ---
 
-### 11. Interactive API Documentation (`localhost:8000/docs`)
-> 15 fully-featured Swagger REST API router endpoints with OpenAPI 3.0 schema definitions.
+### 11. Platform Mission & Architectural Specification (`/about`)
+> Interactive architectural blueprint detailing multi-agent adjudication swarms, Toulmin parsing, prosody metrics, and Kubernetes infrastructure.
 
-![Swagger API Docs](docs/screenshots/14_swagger_api_docs.png)
+![About & Architecture Page](docs/screenshots/20_about_architecture.png)
+
+---
+
+### 12. Interactive API Gateway Portal & Swagger Docs (`logos-ai-api.vercel.app`)
+> 15 fully-featured Swagger REST API router endpoints with OpenAPI 3.0 schema definitions and a browser-friendly API Gateway launchpad.
+
+| Interactive API Gateway Portal (`/`) | Swagger API Docs (`/docs`) |
+|:---:|:---:|
+| ![API Gateway Portal](docs/screenshots/21_api_gateway_portal.png) | ![Swagger API Docs](docs/screenshots/14_swagger_api_docs.png) |
 
 ---
 
