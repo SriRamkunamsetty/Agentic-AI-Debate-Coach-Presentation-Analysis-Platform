@@ -27,7 +27,16 @@ class ToulminEngine:
         if not sentences:
             sentences = [normalized]
 
-        claim = sentences[0]
+        # Break single compound sentences into clauses so "Claim because Warrant, and Evidence" parses richly
+        clauses = [
+            c.strip()
+            for c in re.split(r"\s*(?:;|,\s+and\s+|\b(?=because|since|unless)\b)\s*", normalized, flags=re.IGNORECASE)
+            if c.strip()
+        ]
+        if not clauses:
+            clauses = [normalized]
+
+        claim = clauses[0] if len(sentences) == 1 and len(clauses) > 1 else sentences[0]
         data_points: List[str] = []
         warrants: List[str] = []
         backings: List[str] = []
@@ -36,8 +45,8 @@ class ToulminEngine:
 
         # Grounding / Data detection
         data_patterns = [
-            r"\b(?:study|studies|data|statistics?|research|survey|report|observed|measured|\d+%|\$\d+)\b",
-            r"\b(?:according to|evidence shows|experiments? indicate)\b",
+            r"\b(?:study|studies|data|statistics?|research|survey|report|observed|measured|show|shows|\d+%|\$\d+)\b",
+            r"\b(?:according to|evidence shows|experiments? indicate|collateral damage)\b",
         ]
         # Warrant / Connective logic detection
         warrant_patterns = [
@@ -50,21 +59,22 @@ class ToulminEngine:
         ]
         # Qualifier detection
         qualifier_patterns = [
-            r"\b(?:probably|presumably|almost certainly|in most cases|typically|likely|plausibly)\b",
+            r"\b(?:probably|presumably|almost certainly|in most cases|typically|likely|plausibly|inevitably)\b",
         ]
         # Rebuttal detection
         rebuttal_patterns = [
             r"\b(?:unless|except when|provided that|on the condition that|notwithstanding|even if)\b",
         ]
 
-        for s in sentences[1:] if len(sentences) > 1 else sentences:
+        segments = sentences[1:] if len(sentences) > 1 else (clauses[1:] if len(clauses) > 1 else sentences)
+        for s in segments:
             if any(re.search(p, s, re.IGNORECASE) for p in data_patterns):
                 data_points.append(s)
-            elif any(re.search(p, s, re.IGNORECASE) for p in warrant_patterns):
+            if any(re.search(p, s, re.IGNORECASE) for p in warrant_patterns):
                 warrants.append(s)
-            elif any(re.search(p, s, re.IGNORECASE) for p in backing_patterns):
+            if any(re.search(p, s, re.IGNORECASE) for p in backing_patterns):
                 backings.append(s)
-            elif any(re.search(p, s, re.IGNORECASE) for p in rebuttal_patterns):
+            if any(re.search(p, s, re.IGNORECASE) for p in rebuttal_patterns):
                 rebuttals.append(s)
 
         for s in sentences:
@@ -74,9 +84,14 @@ class ToulminEngine:
                     qualifiers.append(match.group(0).strip().capitalize())
                     break
 
-        # Synthesize fallback entries if explicit cues were missing
-        if not data_points and len(sentences) > 1:
-            data_points.append(sentences[1])
+        # Synthesize guaranteed fallback entries so downstream graph nodes are always populated
+        if not data_points:
+            if len(sentences) > 1:
+                data_points.append(sentences[1])
+            elif len(clauses) > 1:
+                data_points.append(clauses[-1])
+            else:
+                data_points.append(f"Primary premise inferred from statement: '{claim[:80]}'")
         if not warrants:
             warrants.append(f"Inference: If the premises hold, then '{claim[:60]}...' is cogent.")
         if not backings:

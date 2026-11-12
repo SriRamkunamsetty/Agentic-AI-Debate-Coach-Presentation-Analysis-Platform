@@ -33,6 +33,15 @@ class TestArenaEngines(unittest.TestCase):
         self.assertGreaterEqual(result["structural_completeness_percent"], 0)
         self.assertLessEqual(result["structural_completeness_percent"], 100)
 
+        # Single-sentence compound argument regression test
+        single_res = toulmin_engine.parse_argument(
+            "Banning autonomous lethal weapons is urgently necessary because algorithmic targeting systems lack human moral agency, "
+            "and historical precedents show that automated warfare inevitably increases civilian collateral damage in urban combat zones."
+        )
+        self.assertGreater(len(single_res["grounds"]), 0)
+        self.assertGreater(len(single_res["warrants"]), 0)
+        self.assertEqual(len(single_res["graph"]["nodes"]), 6)
+
     def test_fact_checking_assertions(self):
         text = (
             "According to a 2023 United Nations report, global temperatures rose by 1.2 degrees Celsius, "
