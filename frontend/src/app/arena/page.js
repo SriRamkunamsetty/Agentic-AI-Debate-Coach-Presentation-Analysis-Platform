@@ -100,7 +100,7 @@ export default function ArenaPage() {
       const data = await apiFetch("/arena/match/adjudicate", {
         method: "POST",
         body: JSON.stringify({
-          session_id: 1, // sample session
+          session_id: sessionId || null,
           topic,
           turns: turnsPayload,
         }),

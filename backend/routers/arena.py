@@ -32,7 +32,7 @@ class TournamentTurn(BaseModel):
 
 
 class TournamentAdjudicationRequest(BaseModel):
-    session_id: int
+    session_id: Optional[int] = None
     topic: str
     turns: List[TournamentTurn]
 
@@ -70,13 +70,14 @@ def adjudicate_tournament(
     db: Session = Depends(get_db),
 ):
     """3-Judge WSDC/BP Adjudication Panel evaluating Matter, Manner, and Method across all debate rounds."""
-    session = (
-        db.query(models.DebateSession)
-        .filter(models.DebateSession.id == payload.session_id, models.DebateSession.user_id == current_user.id)
-        .first()
-    )
-    if not session:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Debate session not found.")
+    if payload.session_id is not None:
+        session = (
+            db.query(models.DebateSession)
+            .filter(models.DebateSession.id == payload.session_id, models.DebateSession.user_id == current_user.id)
+            .first()
+        )
+        if not session:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Debate session not found.")
 
     turns_dicts = [t.model_dump() for t in payload.turns]
     ballot = tournament_swarm.adjudicate_match(turns_dicts)
